@@ -1,7 +1,7 @@
 import twilio from "twilio";
 
-const accountSid = "ACaee60dedec560b4591b4394772f8b501";
-const authToken = "b6047e81e3c9eaa71663a3b6fe6a202f";
+const accountSid = process.env.ACCOUNT_SID
+const authToken = process.env.AUTH_TOKEN
 
 const client = twilio(accountSid, authToken);
 export async function sendTextToPhone(PhoneNumber, message) {
