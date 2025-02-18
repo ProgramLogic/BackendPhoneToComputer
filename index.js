@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { sendTextToPhone } from "./twilio.js";
+import twilio from 'twilio'
 
 const app = express();
 const PORT = 4000;
@@ -31,3 +32,11 @@ app.post("/send", async (req, res) => {
     res.json(" There was an error sending the text: ");
   }
 });
+app.post("/sms",(req,res) => {
+const { MessagingResponse } = twilio.twiml;
+const twiml = new MessagingResponse();
+console.log(req.body.Body)
+twiml.message("Hallo")
+res.type("text/xml").send(twiml.toString())
+})
+
