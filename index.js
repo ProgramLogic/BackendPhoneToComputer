@@ -1,13 +1,17 @@
 import express from "express";
 import cors from "cors";
 import { sendTextToPhone } from "./twilio.js";
-import twilio from 'twilio'
+import twilio from "twilio";
+import bodyParser from "body-parser";
 
 const app = express();
 const PORT = 4000;
 
+let replyMessage;
+
 app.use(express.json());
 app.use(cors());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.listen(PORT, () => {
   console.log(`App is now Running on ${PORT}`);
@@ -32,11 +36,15 @@ app.post("/send", async (req, res) => {
     res.json(" There was an error sending the text: ");
   }
 });
-app.post("/sms",(req,res) => {
-const { MessagingResponse } = twilio.twiml;
-const twiml = new MessagingResponse();
-console.log(req.body.Body)
-twiml.message("Hallo")
-res.type("text/xml").send(twiml.toString())
-})
+app.post("/sms", (req, res) => {
+  const { MessagingResponse } = twilio.twiml;
+  const twiml = new MessagingResponse();
+  console.log(req.body.Body);
+  replyMessage = req.body.Body;
+  twiml.message("We have recieved your message");
+  res.type("text/xml").send(twiml.toString());
+});
 
+app.get("/replyMessages", (req, res) => {
+  res.json(replyMessage);
+});
